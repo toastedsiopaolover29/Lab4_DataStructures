@@ -34,41 +34,77 @@ records = [
 records.append(records[2])
 records.append(records[1])
 
-print("GENERATED TEST DATA")
-for record in records:
-    print(record)
-
 # Organize by category
 organized = {}
 
 for record in records:
     organized.setdefault(record["category"], []).append(record["value"])
 
-print("\nORGANIZED TEST DATA")
-for category, vals in organized.items():
-    print(category, ":", vals)
-
 # Distinct values
 distinct_values = set()
+
 for record in records:
     distinct_values.add(record["value"])
 
-print("\nDISTINCT VALUES")
-print(distinct_values)
-
 # Category averages
-print("\nCATEGORY SUMMARIES")
+category_summaries = {}
+
 for category, vals in organized.items():
-    avg = sum(vals) / len(vals)
-    print(f"{category}: {avg:.2f}")
+    category_summaries[category] = round(
+        sum(vals) / len(vals),
+        2
+    )
 
 # Ordered values
 ordered = sorted([r["value"] for r in records])
 
-print("\nORDERED RESULTS")
+# Processed results
+processed_results = {
+    "highest": max(ordered),
+    "lowest": min(ordered),
+    "range": max(ordered) - min(ordered)
+}
+
+# ==================================================
+# ASSESSMENT DATA
+# ==================================================
+
+print("=" * 50)
+print("ASSESSMENT DATA")
+print("=" * 50)
+
+print("\n1. Generated Test Data")
+print(records)
+
+print("\n2. Organized Test Data")
+print(organized)
+
+print("\n3. Distinct Data")
+print(distinct_values)
+
+print("\n4. Numeric/Categorical Summaries")
+print(category_summaries)
+
+print("\n5. Processed Results")
+print(processed_results)
+
+print("\n6. Ordered Results")
 print(ordered)
 
-print("\nFINAL SUMMARY")
-print("Highest:", max(ordered))
-print("Lowest:", min(ordered))
-print("Range:", max(ordered) - min(ordered))
+# ==================================================
+# FINAL OUTPUT
+# ==================================================
+
+print("\n" + "=" * 50)
+print("FINAL OUTPUT")
+print("=" * 50)
+
+print("\nFinal Organized and Summarized Test Dataset")
+
+for category, vals in organized.items():
+    print(f"{category}: {vals}")
+
+print(f"\nHighest = {processed_results['highest']}")
+print(f"Lowest = {processed_results['lowest']}")
+print(f"Range = {processed_results['range']}")
+print(f"Distinct Values = {len(distinct_values)}")

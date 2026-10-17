@@ -15,6 +15,16 @@ def generate_value(position):
     return alphabetical_value + (position * SEED_NUM)
 
 
+def performance(score):
+    if score >= 90:
+        return "Excellent"
+    if score >= 80:
+        return "Good"
+    if score >= 70:
+        return "Satisfactory"
+    return "Needs Improvement"
+
+
 subjects = (
     "Programming",
     "Mathematics",
@@ -26,13 +36,9 @@ subjects = (
 students = [f"{LAST_NAME}_C{i}" for i in range(1, 6)]
 
 scores = [
-    80 + SEED_NUM + 0,
-    80 + SEED_NUM + 3,
-    80 + SEED_NUM + 6,
-    80 + SEED_NUM + 9,
-    80 + SEED_NUM + 12
+    min(100, 70 + generate_value(pos))
+    for pos in range(1, 6)
 ]
-
 records = []
 
 for student, subject, score in zip(students, subjects, scores):
@@ -52,52 +58,31 @@ records.append({
     "score": None
 })
 
-print("GENERATED PERFORMANCE RECORDS")
-for record in records:
-    print(record)
+# ----
+# PREPARE DATA FOR REPORTING
 
-# Separate valid records
-valid_records = [r for r in records if r["score"] is not None]
+# Incomplete records
+incomplete_records = [
+    record for record in records
+    if record["score"] is None
+]
 
-# Detect duplicates
-seen = set()
-duplicates = []
+valid_records = [
+    record for record in records
+    if record["score"] is not None
+]
 
-for record in valid_records:
-    key = (record["student"], record["subject"])
-    if key in seen:
-        duplicates.append(record)
-    else:
-        seen.add(key)
+duplicates = [
+    record for index, record in enumerate(records)
+    if record in records[:index]
+]
 
-print("\nREPEATED RECORDS")
-for item in duplicates:
-    print(item)
+# Performance categories
+performance_categories = {}
 
-# Missing scores
-print("\nINCOMPLETE RECORDS")
-for item in records:
-    if item["score"] is None:
-        print(item)
-
-# Categorize performance
-
-
-def performance(score):
-    if score >= 90:
-        return "Excellent"
-    elif score >= 85:
-        return "Very Good"
-    else:
-        return "Good"
-
-
-print("\nPERFORMANCE CATEGORY")
 for record in valid_records[:5]:
-    print(
-        record["subject"],
-        "-",
-        performance(record["score"])
+    performance_categories[record["subject"]] = performance(
+        record["score"]
     )
 
 # Subject summary
@@ -106,16 +91,61 @@ subject_data = {}
 for record in valid_records[:5]:
     subject_data[record["subject"]] = record["score"]
 
-print("\nSTUDENT SUMMARY")
-average = sum(subject_data.values()) / len(subject_data)
+average = round(
+    sum(subject_data.values()) / len(subject_data),
+    2
+)
 
-print("Average:", round(average, 2))
-print("Highest:", max(subject_data.values()))
-print("Lowest:", min(subject_data.values()))
+student_summary = {
+    "Average": average,
+    "Highest": max(subject_data.values()),
+    "Lowest": min(subject_data.values())
+}
 
-print("\nORDERED RESULTS")
-print(sorted(subject_data.values()))
+ordered_results = sorted(subject_data.values())
 
-print("\nFINAL STUDENT PERFORMANCE REPORT")
+# -----
+# ASSESSMENT DATA
+
+print("=" * 50)
+print("ASSESSMENT DATA")
+print("=" * 50)
+
+print("\n1. Generated Performance Records")
+print(records)
+
+print("\n2. Organized Performance Data")
+print(subject_data)
+
+print("\n3. Repeated/Incomplete Records")
+
+print("\nRepeated Records:")
+print(duplicates)
+
+print("\nIncomplete Records:")
+print(incomplete_records)
+
+print("\n4. Performance Categories")
+print(performance_categories)
+
+print("\n5. Student and Subject Summaries")
+print(student_summary)
+
+print("\n6. Ordered Results")
+print(ordered_results)
+
+# -----
+# FINAL OUTPUT
+
+print("\n" + "=" * 50)
+print("FINAL OUTPUT")
+print("=" * 50)
+
+print("\nFinal Student Performance Report")
+
 for subject, score in subject_data.items():
-    print(subject, ":", score)
+    print(f"{subject}: {score}")
+
+print(f"\nAverage = {student_summary['Average']}")
+print(f"Highest = {student_summary['Highest']}")
+print(f"Lowest = {student_summary['Lowest']}")
