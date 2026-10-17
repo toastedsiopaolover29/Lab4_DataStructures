@@ -65,9 +65,8 @@ processed_results = {
     "range": max(ordered) - min(ordered)
 }
 
-# ==================================================
+# ------
 # ASSESSMENT DATA
-# ==================================================
 
 print("=" * 50)
 print("ASSESSMENT DATA")
@@ -91,9 +90,8 @@ print(processed_results)
 print("\n6. Ordered Results")
 print(ordered)
 
-# ==================================================
+# ------
 # FINAL OUTPUT
-# ==================================================
 
 print("\n" + "=" * 50)
 print("FINAL OUTPUT")
